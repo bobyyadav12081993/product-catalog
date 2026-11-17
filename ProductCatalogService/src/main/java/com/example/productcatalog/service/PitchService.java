@@ -9,12 +9,13 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.example.productcatalog.dto.GroqPitchResponseDto;
 import com.example.productcatalog.model.Product;
 
-
+@Service
 public class PitchService {
     private static final String GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
     private static final String MODEL = "openai/gpt-oss-20b";

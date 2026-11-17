@@ -2,6 +2,8 @@ package com.example.productcatalog.controller;
 
 import java.util.List;
 
+import com.example.productcatalog.dto.ProductPitchDto;
+import com.example.productcatalog.service.PitchService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 public class ProductController {
 
     private final IProductService productService;
+    private final PitchService pitchService;
 
     @GetMapping 
     public List<Product> getProducts() {
