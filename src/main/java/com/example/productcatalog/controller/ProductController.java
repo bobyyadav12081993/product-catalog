@@ -4,13 +4,11 @@ import java.util.List;
 
 import com.example.productcatalog.dto.ProductPitchDto;
 import com.example.productcatalog.service.PitchService;
+import com.example.productcatalog.utility.Utilities;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.*;
 import com.example.productcatalog.dto.CategoryDto;
 import com.example.productcatalog.dto.ProductDto;
 import com.example.productcatalog.model.Product;
@@ -20,11 +18,17 @@ import lombok.RequiredArgsConstructor;
 
 @RestController 
 @RequestMapping("/products")
-@RequiredArgsConstructor 
 public class ProductController {
 
-    private final IProductService productService;
+    private final IProductService storageService;
+    private final IProductService aiAgentSupplierService;
     private final PitchService pitchService;
+
+    public ProductController( @Qualifier("storageProductService") IProductService aiAgentSupplierService, IProductService storageService, PitchService pitchService) {
+        this.aiAgentSupplierService = aiAgentSupplierService;
+        this.pitchService = pitchService;
+        this.storageService = storageService;
+    }
 
     @GetMapping 
     public List<Product> getProducts() {
@@ -37,30 +41,12 @@ public class ProductController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        Product product = productService.getProductById(id);
+        Product product = storageService.getProductById(id);
         if (product == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
         }
-        return new ResponseEntity<>(from(product), HttpStatus.OK);
-    }
-
-    private ProductDto from(Product product) {
-        ProductDto dto = new ProductDto();
-        dto.setId(product.getId());
-        dto.setName(product.getName());
-        dto.setDescription(product.getDescription());
-        dto.setPrice(product.getPrice());
-        dto.setImageUrl(product.getImageUrl());
-
-        if (product.getCategory() != null) {
-            CategoryDto categoryDto = new CategoryDto();
-            categoryDto.setId(product.getCategory().getId());
-            categoryDto.setName(product.getCategory().getName());
-            categoryDto.setDescription(product.getCategory().getDescription());
-            dto.setCategory(categoryDto);
-        }
-        return dto;
+        return new ResponseEntity<>(Utilities.productToProductDto(product), HttpStatus.OK);
     }
 
     @GetMapping("/{id}/pitch")
@@ -69,7 +55,7 @@ public class ProductController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        Product product = productService.getProductById(id);
+        Product product = storageService.getProductById(id);
         if(product==null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -79,5 +65,11 @@ public class ProductController {
         productPitchDto.setPitch(pitchService.generatePitch(product));
         return new ResponseEntity<>(productPitchDto,HttpStatus.OK);
 
+    }
+
+    @PostMapping
+    public ProductDto createProduct(@RequestBody ProductDto productDto) {
+        Product product = storageService.createProduct(productDto);
+        return null;
     }
 }

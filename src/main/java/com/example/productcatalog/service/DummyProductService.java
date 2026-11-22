@@ -1,5 +1,6 @@
 package com.example.productcatalog.service;
 
+import com.example.productcatalog.dto.ProductDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -30,6 +31,16 @@ public class DummyProductService implements IProductService {
         } catch (HttpClientErrorException.NotFound e) {
             return null;
         }
+    }
+
+    @Override
+    public Product createProduct(ProductDto productDto) {
+        return null;
+    }
+
+    @Override
+    public boolean deleteProductById(Long id) {
+        return false;
     }
 
     private Product from(DummyJsonProductDto dto) {

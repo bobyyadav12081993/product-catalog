@@ -3,6 +3,7 @@ package com.example.productcatalog.service;
 import java.util.List;
 import java.util.Map;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.restclient.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
@@ -16,6 +17,7 @@ import com.example.productcatalog.dto.GroqPitchResponseDto;
 import com.example.productcatalog.model.Product;
 
 @Service
+@Slf4j
 public class PitchService {
     private static final String GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
     private static final String MODEL = "openai/gpt-oss-20b";
@@ -53,7 +55,7 @@ public class PitchService {
             throw new IllegalArgumentException("Pitch couldnt be geenrated");
         }
         catch (Exception e) {
-            System.out.println(e.getMessage());
+            log.error("Error in LLM call to generate pitch :: ", e);
             return "New arrival: " + product.getName() +
                     " for just $" + product.getPrice() + ". Check it out!";
         }
