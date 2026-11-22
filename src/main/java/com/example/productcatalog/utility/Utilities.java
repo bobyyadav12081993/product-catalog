@@ -2,6 +2,7 @@ package com.example.productcatalog.utility;
 
 import com.example.productcatalog.dto.CategoryDto;
 import com.example.productcatalog.dto.ProductDto;
+import com.example.productcatalog.enums.State;
 import com.example.productcatalog.model.Category;
 import com.example.productcatalog.model.Product;
 
@@ -19,6 +20,7 @@ public class Utilities {
             Category category = new Category();
             category.setName(dto.getCategory().getName());
             category.setDescription(dto.getCategory().getDescription());
+            category.setState(State.ACTIVE);
             product.setCategory(category);
         }
         return product;

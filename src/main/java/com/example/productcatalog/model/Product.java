@@ -6,12 +6,13 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity 
-@Data 
+@Data
+@Table(indexes = @Index(name = "idx_product_name", columnList = "name"))
 public class Product extends BaseEntity {
     private String name;
     private String description;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
 
